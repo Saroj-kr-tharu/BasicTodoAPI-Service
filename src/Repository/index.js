@@ -1,5 +1,6 @@
 
 
 module.exports = {
-   CURD_Repo: require('./CURD')
+   
+   TaskRepository:  require('./task-repository')
 }

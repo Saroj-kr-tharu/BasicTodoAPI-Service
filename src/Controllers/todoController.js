@@ -1,16 +1,17 @@
 const {
-    readTodosService,
-    createTodoService,
-    getTodoService,
-    updateTodoService,
-    deleteTodoService
+    readTaskService,
+    createTaskService,
+    getTaskService,
+    updateTaskService,
+    deleteTaskService,
+    filterTaskService
 } = require('../Services/TodoService');
 
 const {SuccessCode, ClientErrorCode, ServerErrorCode} = require("../utlis/https_codes");
 
-const readTodosController = async (req, res) => {
+const readTaskController = async (req, res) => {
     try {
-        const datas = await readTodosService();
+        const datas = await readTaskService();
         return res.status(SuccessCode.OK).json({
             message: 'Successfully feteched the data',
             success: true,
@@ -33,11 +34,11 @@ const readTodosController = async (req, res) => {
     }
 }
 
-const createTodoController = async (req, res) => {
+const createTaskController = async (req, res) => {
     try {
         const data = req.body;
 
-        const response = await createTodoService(data);
+        const response = await createTaskService(data);
 
         return res.status(SuccessCode.CREATED).json({
             message: 'Successfully created the data',
@@ -49,10 +50,10 @@ const createTodoController = async (req, res) => {
 
 
     } catch (error) {
-        console.log('Something went wrong in controller level in reading ');
+        console.log('Something went wrong in controller level in (create) ');
 
         return res.status(ServerErrorCode.NOT_IMPLEMENT).json({
-            message: 'Failed to create new todo',
+            message: 'Failed to create new task',
             success: false,
             data: {},
             err: error.message || error
@@ -62,12 +63,12 @@ const createTodoController = async (req, res) => {
 }
 
 
-const getTodoController = async (req, res) => {
+const getTaskController = async (req, res) => {
     try {
         const data = req.query.id;
         // console.log(data);
 
-        const response = await getTodoService(data);
+        const response = await getTaskService(data);
 
         let msg = 'Successfully fetch  data';
         if (!response)
@@ -81,10 +82,10 @@ const getTodoController = async (req, res) => {
         })
 
     } catch (error) {
-        console.log('Something went wrong in controller level in get todo  ');
+        console.log('Something went wrong in controller level in get task  ');
 
         return res.status(ServerErrorCode.INTERNAL_SERVER).json({
-            message: 'Failed to fetch  todo',
+            message: 'Failed to fetch  task',
             success: false,
             data: {},
             err: error.message || error
@@ -93,14 +94,14 @@ const getTodoController = async (req, res) => {
     }
 }
 
-const updateTodoController = async (req, res) => {
+const updateTaskController = async (req, res) => {
     try {
         const id = req.query.id;
         const data = req.body;
 
-        const response = await updateTodoService(id, data);
+        const response = await updateTaskService(id, data);
         return res.status(SuccessCode.OK).json({
-            message: "Successfully update todo",
+            message: "Successfully update task",
             success: true,
             data: response,
             err: {}
@@ -110,7 +111,7 @@ const updateTodoController = async (req, res) => {
         console.log('Something went wrong in controller level in update todo  ');
 
         return res.status(ServerErrorCode.INTERNAL_SERVER).json({
-            message: 'Failed to fetch  todo from controller',
+            message: 'Failed to fetch  task from controller',
             success: false,
             data: {},
             err: error.message || error
@@ -119,13 +120,13 @@ const updateTodoController = async (req, res) => {
     }
 }
 
-const deleteTodoController = async (req, res) => {
+const deleteTaskController = async (req, res) => {
     try {
         const id = req.query.id;
 
-        const response = await deleteTodoService(id);
+        const response = await deleteTaskService(id);
 
-        let msg = "Successfully delete todo";
+        let msg = "Successfully delete task";
         if (!response)
             msg = "id is not present";
 
@@ -137,7 +138,36 @@ const deleteTodoController = async (req, res) => {
         })
 
     } catch (error) {
-        console.log('Something went wrong in controller level in deleting todo  ');
+        console.log('Something went wrong in controller level in deleting task  ');
+
+        return res.status(ServerErrorCode.INTERNAL_SERVER).json({
+            message: 'Failed to delete  todo from controller',
+            success: false,
+            data: {},
+            err: error.message || error
+        })
+    }
+}
+
+const filterTaskController = async (req, res) => {
+    try {
+        const data = req.body;
+
+        const response = await filterTaskService(data);
+        
+        let msg = "Successfully Fetched filter task";
+        if (!response)
+            msg = "data  is not present";
+
+        return res.status(SuccessCode.OK).json({
+            message: msg,
+            success: true,
+            data: response,
+            err: {}
+        })
+
+    } catch (error) {
+        console.log('Something went wrong in controller level in deleting task  ');
 
         return res.status(ServerErrorCode.INTERNAL_SERVER).json({
             message: 'Failed to delete  todo from controller',
@@ -149,9 +179,10 @@ const deleteTodoController = async (req, res) => {
 }
 
 module.exports = {
-    readTodosController,
-    createTodoController,
-    getTodoController,
-    updateTodoController,
-    deleteTodoController
+    readTaskController,
+    createTaskController,
+    getTaskController,
+    updateTaskController,
+    deleteTaskController,
+    filterTaskController
 }

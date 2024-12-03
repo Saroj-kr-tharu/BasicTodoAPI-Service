@@ -1,26 +1,13 @@
-const { CURD_Repo } = require('../Repository/index');
-const { v4: uuidv4 } = require('uuid');
+const { TaskRepository } = require('../Repository/index');
 
 const { formatDate } = require('../utlis/index');
 
-const curd = new CURD_Repo();
+const curd = new TaskRepository();
 
-const createTodoService = (data) => {
+const createTaskService = (data) => {
     try {
-        const ids = uuidv4();
 
-        const conData = {
-            id: ids,
-            title: data.title,
-            completed: data.completed,
-            description: data.description,
-            createdAt: formatDate(),
-            updatedAt: formatDate()
-        }
-
-
-        // console.log(conData);
-        const datares = curd.createTodos(conData);
+        const datares = curd.create(data);
         return datares;
 
     } catch (error) {
@@ -30,65 +17,66 @@ const createTodoService = (data) => {
 
 }
 
-const readTodosService = async () => {
+const readTaskService = async () => {
     try {
-        const data = await curd.readTodos();
+        const data = await curd.getAll();
         return data;
 
     } catch (error) {
-        console.log('Something Went wrong in Service layer creating todo');
+        console.log('Something Went wrong in Service layer (getAll) todo');
         throw error;
     }
 }
 
-const getTodoService = async (id) => {
+const getTaskService = async (id) => {
     try {
-        const data = await curd.getTodo(id);
+        const data = await curd.getById(id);
         return data;
 
     } catch (error) {
-        console.log('Something Went wrong in Service layer creating todo');
+        console.log('Something Went wrong in Service layer (getById)');
         throw error;
     }
 }
 
-const updateTodoService = async (id, data) => {
+const updateTaskService = async (id, data) => {
     try {
-        const predata = await curd.getTodo(id);
-        if (!predata)
-            return false;
-
-
-        const response = await curd.updateTodo(id, data);
+       
+        const response = await curd.update(id, data);
         return response;
 
     } catch (error) {
-        console.log('Something Went wrong in Service layer updating  todo');
+        console.log('Something Went wrong in Service layer (updating) ');
         throw error;
     }
 }
 
-const deleteTodoService = async (id, data) => {
+const deleteTaskService = async (id, data) => {
     try {
-        const predata = await curd.getTodo(id);
-        if (!predata)
-            return false;
-
-        const response = await curd.deleteTodo(id, data);
-
-
+        const response = await curd.delete(id, data);
         return response;
 
     } catch (error) {
-        console.log('Something Went wrong in Service layer updating  todo');
+        console.log('Something Went wrong in Service layer (delete)');
         throw error;
     }
 }
 
+const filterTaskService = async (data) => {
+    try {
+        const response = await curd.filter(data);
+        return response;
+
+    } catch (error) {
+        console.log('Something Went wrong in Service layer (filter)');
+        throw error;
+    }
+}
 module.exports = {
-    createTodoService,
-    readTodosService,
-    getTodoService,
-    updateTodoService,
-    deleteTodoService
+    createTaskService,
+    readTaskService,
+    getTaskService,
+    updateTaskService,
+    deleteTaskService,
+    filterTaskService
 }

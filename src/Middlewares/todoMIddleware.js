@@ -1,19 +1,22 @@
-const {ClientErrorCode} = require("../utlis/https_codes");
+const { ClientErrorCode } = require("../utlis/https_codes");
 
-const validateUpdateTodo = (req, res, next) => {
+
+const validateUpdateTask = (req, res, next) => {
+
+    const updateKeys = ['title', 'description',
+         'priority', 'status', 'dueDate', 'startDate', 'endDate', 
+         'createdAt', 'completedAt'];
 
     if (
         !req.query.id
         ||
-        (!req.body.title &&
-            !req.body.description &&
-            !req.body.completed)
-
+        (!Object.keys(req.body).some(key => updateKeys.includes(key))
+        )
 
     ) {
         return res.status(ClientErrorCode.BAD_REQUEST).json({
-            message: 'Invalid request for update Todo',
-            err: 'Missing mandatory properties to update Todo ',
+            message: 'Invalid request for update Task',
+            err: 'Missing mandatory properties to update Task ',
             data: {},
             success: false
         })
@@ -22,12 +25,11 @@ const validateUpdateTodo = (req, res, next) => {
     next();
 }
 
-const validateCreateTodo = (req, res, next) => {
+const validateCreateTask = (req, res, next) => {
 
     if (
         !req.body.title ||
-        !req.body.description ||
-        !req.body.completed
+        !req.body.description
     ) {
 
         return res.status(ClientErrorCode.BAD_REQUEST).json({
@@ -43,12 +45,12 @@ const validateCreateTodo = (req, res, next) => {
     next();
 }
 
-const validateDeleteTodo = (req, res, next) => {
+const validateDeleteTask = (req, res, next) => {
 
     if (!req.query.id) {
         return res.status(ClientErrorCode.BAD_REQUEST).json({
-            message: 'Invalid request for delete Todo',
-            err: 'Missing mandatory properties to delete Todo ',
+            message: 'Invalid request for delete Task',
+            err: 'Missing mandatory properties to delete Task ',
             data: {},
             success: false
 
@@ -58,9 +60,32 @@ const validateDeleteTodo = (req, res, next) => {
     next();
 }
 
+const validateFilterTask = (req, res,next)  => {
+    const updateKeys = ['title', 'description',
+        'priority', 'status', 'dueDate', 'startDate', 'endDate', 
+        'createdAt', 'completedAt'];
+
+   if (
+       !req.query.id
+       ||
+       (!Object.keys(req.body).some(key => updateKeys.includes(key))
+       )
+
+   ) {
+       return res.status(ClientErrorCode.BAD_REQUEST).json({
+           message: 'Invalid request for update Task',
+           err: 'Missing mandatory properties to update Task ',
+           data: {},
+           success: false
+       })
+   }
+
+   next();
+}
 
 module.exports = {
-    validateCreateTodo,
-    validateUpdateTodo,
-    validateDeleteTodo
+    validateCreateTask,
+    validateUpdateTask,
+    validateDeleteTask,
+    validateFilterTask
 }

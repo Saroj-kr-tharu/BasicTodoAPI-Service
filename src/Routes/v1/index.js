@@ -1,14 +1,16 @@
 const express = require('express');
 const {
-    readTodosController,
-    createTodoController,
-    getTodoController,
-    updateTodoController,
-    deleteTodoController
+    readTaskController,
+    createTaskController,
+    getTaskController,
+    updateTaskController,
+    deleteTaskController,
+    filterTaskController
+    
 
 } = require('../../Controllers/todoController');
 
-const {validateCreateTodo, validateUpdateTodo, validateDeleteTodo} = require("../../Middlewares/todoMIddleware");
+const {validateCreateTask, validateUpdateTask, validateDeleteTask, validateFilterTask} = require("../../Middlewares/todoMIddleware");
 
 const router = express.Router();
 
@@ -21,10 +23,11 @@ router.get('/', (req,res) => {
     })
 });
 
-router.get('/Todos', readTodosController );
-router.post('/create',validateCreateTodo ,createTodoController);
-router.get('/todo',getTodoController);
-router.patch('/todoUpdate',validateUpdateTodo ,updateTodoController);
-router.delete('/deleteTodo',validateDeleteTodo, deleteTodoController);
+router.get('/getAllTask', readTaskController );
+router.post('/createTask',validateCreateTask ,createTaskController);
+router.get('/taskById',getTaskController);
+router.patch('/updateTask',validateUpdateTask ,updateTaskController);
+router.delete('/deleteTask',validateDeleteTask, deleteTaskController);
+router.get('/filterTask', validateFilterTask,filterTaskController);
 
 module.exports= router;
